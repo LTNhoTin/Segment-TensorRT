@@ -1,0 +1,16 @@
+name: Convert ONNX to TensorRT on Kaggle
+
+on:
+  workflow_run:
+    workflows: ["Upload ONNX Model to Kaggle"]
+    types:
+      - completed
+
+jobs:
+  run-kaggle-notebook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Kaggle Notebook
+        run: |
+          pip install kaggle
+          kaggle kernels push -p kaggle_convert/

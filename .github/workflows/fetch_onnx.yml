@@ -1,0 +1,27 @@
+name: Fetch ONNX Model from Segment-Text
+
+on:
+    push:
+      branches:
+        - main 
+jobs:
+  fetch-onnx:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download ONNX model from Segment-Text
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: convert_model.yml  # Tên workflow tạo ONNX model
+          name: model-onnx
+          repo: LTNhoTin/Segment-Text
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          path: models/
+
+      - name: Upload model artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-onnx
+          path: models/model.onnx
