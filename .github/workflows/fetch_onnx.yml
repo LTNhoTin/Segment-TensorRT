@@ -1,9 +1,9 @@
 name: Fetch ONNX Model from Segment-Text
 
 on:
-    push:
-      branches:
-        - main 
+  repository_dispatch:
+    types: [trigger-tensorrt]  # Kích hoạt khi Segment-Text gửi tín hiệu
+
 jobs:
   fetch-onnx:
     runs-on: ubuntu-latest
@@ -14,7 +14,7 @@ jobs:
       - name: Download ONNX model from Segment-Text
         uses: dawidd6/action-download-artifact@v2
         with:
-          workflow: convert_model.yml  # Tên workflow tạo ONNX model
+          workflow: Convert PyTorch Model to ONNX.yml
           name: model-onnx
           repo: LTNhoTin/Segment-Text
           github_token: ${{ secrets.GITHUB_TOKEN }}
