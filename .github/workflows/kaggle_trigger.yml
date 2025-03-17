@@ -1,0 +1,30 @@
+name: Trigger Kaggle Notebook
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "models/*.onnx"  # Chỉ chạy khi có thay đổi file .onnx
+
+jobs:
+  run-kaggle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Cài đặt Kaggle CLI
+        run: pip install kaggle
+
+      - name: Cấu hình Kaggle API Key
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+        run: |
+          mkdir -p ~/.kaggle
+          echo "{\"username\":\"${KAGGLE_USERNAME}\",\"key\":\"${KAGGLE_KEY}\"}" > ~/.kaggle/kaggle.json
+          chmod 600 ~/.kaggle/kaggle.json
+
+      - name: Trigger Kaggle Notebook
+        run: kaggle kernels push -p kaggle-notebook
